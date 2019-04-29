@@ -13,20 +13,24 @@ export default {
         id:"",
         index:"",
         name:"",
-        item:[{
+        itemList:[{
           pt_id:"",
+          pt_name:"",
+          pt_type:"",
         }],
       }],
-      item:[{
+      itemList:[{
         pt_id:"",
+        pt_name:"",
+        pt_type:"",
       }],
     },
   },
 
-  subscriptions: {
+  /*subscriptions: {
     setup({ dispatch, history }) {  // eslint-disable-line
     },
-  },
+  },*/
 
   effects: {
     *GET_SYSTEM_INFO({ payload }, { call, put }){

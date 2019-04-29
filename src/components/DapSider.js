@@ -3,7 +3,7 @@ import {Layout, Tabs, Menu} from 'antd';
 import { connect } from 'dva';
 import { Link} from "react-router-dom";
 import styles from "./DapSider.css";
-const {Sider} = Layout;
+const { Sider } = Layout;
 const TabPane = Tabs.TabPane;
 const SubMenu = Menu.SubMenu;
 
@@ -64,7 +64,7 @@ class DapSider extends Component{
                       {
 
                         unit.systemList.map(sys => {
-                          const id = sys.id + "&0&0";
+                          const id = sys.id + "&0&0&0";
                           return(
                             <Menu.Item key={sys.index} >
                               <Link to={{pathname:`/DapSystem/${id}`}}>{sys.name}</Link>

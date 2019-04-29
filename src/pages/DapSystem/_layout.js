@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
-import { Layout } from 'antd/lib/index';
+import { Layout } from 'antd';
 import { connect } from 'dva/index';
-import { Typography, Icon, Menu } from 'antd';
+import { Icon, Menu } from 'antd';
+import './_layout.css';
+import { Link } from 'react-router-dom';
 
-const { Title } = Typography;
-const { Header, Footer, Sider, Content } = Layout;
+const { Header, Content } = Layout;
 const SubMenu = Menu.SubMenu;
-const MenuItemGroup = Menu.ItemGroup;
 
-const height = document.documentElement.clientHeight*0.75;
 const namespace = 'sysmodel_deva';
 
 const mapStateToProps = (state) => {
@@ -24,81 +23,109 @@ const mapDispatchToProps = (dispatch) => {
     onDidMount: (id) => {
       dispatch({
         type: `${namespace}/GET_SYSTEM_INFO`,
-        payload: {id: id},
+        payload: { id: id },
       });
     },
   };
 };
 
 
-
 class _layout extends Component {
 
   componentDidMount() {
-    const pathname = this.props.location.pathname.split("/");
-    const id = pathname[2].split("&")[0];
+    const pathname = this.props.location.pathname.split('/');
+    const id = pathname[2].split('&')[0];
     //const id = this.props.match.params.id;
     this.props.onDidMount(id);
   }
 
   render() {
     //是否重新调用请求
-    const pathname = this.props.location.pathname.split("/");
-    const select_id = pathname[2].split("&")[0];
+    const pathname = this.props.location.pathname.split('/');
+    const select_id = parseInt(pathname[2].split('&')[0]);
     //const select_id = this.props.match.params.id;
-    const info_id = this.props.info.id;
-    if(select_id != info_id){
-      this.componentDidMount();
+    const info_id = parseInt(this.props.info.id);
+    const sysPathId = info_id + '&0&0&0';
+
+    if (select_id !== info_id) {
+      //this.componentDidMount();
+      console.log('DidMount');
     }
 
     return (
       <Layout>
-        <Header style={{ background: '#fff', padding: 0}}>
-          <div style={{float:"left"}}>
-            <Title level={2} style={{fontFamily:"微软雅黑"}}>
-              <Icon type="sync" spin />
-              &nbsp;
-              &nbsp;
-              {this.props.info.name}
-              &nbsp;
-              &nbsp;
-              |
-              &nbsp;
-            </Title>
-          </div>
-          <div style={{float:"left" }}>
-            <Menu
+        <Header style={{ background: '#fff', padding: 0 }}>
+          {/*当前选择的系统*/}
+          <div style={{ float: 'left' }}>
+            <Menu mode={'horizontal'} style={{ display: 'inline-block' }}>
+              <SubMenu
+                key={info_id}
+                title={
+                  <span>
+                    <Icon type="setting"/>
+                    <Link to={{ pathname: `/DapSystem/${sysPathId}` }}>
+                      {this.props.info.name}
+                    </Link>
+                  </span>
+                }
+                style={{ fontSize: '2.2em' }}
+              >
 
-              mode="horizontal"
-            >
-              <Menu.Item key="mail">
-                <Icon type="mail" />磨煤机
-              </Menu.Item>
-              <Menu.Item key="app" disabled>
-                <Icon type="appstore" />给煤机
-              </Menu.Item>
-              <SubMenu title={<span className="submenu-title-wrapper"><Icon type="setting" />密封风机</span>}>
-                <MenuItemGroup title="Item 1">
-                  <Menu.Item key="setting:1">Option 1</Menu.Item>
-                  <Menu.Item key="setting:2">Option 2</Menu.Item>
-                </MenuItemGroup>
-                <MenuItemGroup title="Item 2">
-                  <Menu.Item key="setting:3">Option 3</Menu.Item>
-                  <Menu.Item key="setting:4">Option 4</Menu.Item>
-                </MenuItemGroup>
+                {this.props.info.itemList.map(
+                  (item) => {
+                    const ptPathId = info_id + "&0&" + item.pt_id + "&" + item.pt_type;
+                    return (
+                      <Menu.Item key={item.pt_id}>
+                        <Link to={{pathname:`/DapSystem/${ptPathId}`}}>
+                          {item.pt_name}
+                        </Link>
+                      </Menu.Item>
+                    );
+                  },
+                )}
               </SubMenu>
-              <Menu.Item key="alipay">
-                <a href="https://ant.design" target="_blank" rel="noopener noreferrer">润滑油泵</a>
-              </Menu.Item>
+              {/* 属于当前系统的设备*/}
+              {
+                this.props.info.deviceList.map(dev => {
+                  const sysId = this.props.info.id;
+                  const devId = dev.id;
+                  const devPathId = sysId + '&' + devId + '&0&0';
+                  return (
+                    <SubMenu
+                      key={dev.id}
+                      title={
+                        <span>
+                          <Link to={{ pathname: `/DapSystem/${devPathId}` }}>
+                            {dev.name}
+                          </Link>
+                        </span>
+                      }
+                      style={{ fontSize: '1.8em' }}
+                    >
+                      {dev.itemList.map(item => {
+                        const ptPathId = sysId + "&" + devId + "&" + item.pt_id + "&" + item.pt_type
+                        return (
+                          <Menu.Item key={item.pt_id}>
+                            <Link to={{pathname:`/DapSystem/${ptPathId}`}}>
+                              {item.pt_name}
+                            </Link>
+                          </Menu.Item>
+                        );
+                      })}
+                    </SubMenu>
+                  );
+                })
+              }
+
+
             </Menu>
           </div>
 
-
         </Header>
-        <Layout style={{height:'100%'}}>
-          <Sider style={{background: '#fff', padding: 0, height:height}}>
+        <Layout style={{ height: '100%' }}>
+          {/*<Sider style={{background: '#fff', padding: 0, height:height}}>
             ss
-          </Sider>
+          </Sider>*/}
           <Content>
             {this.props.children}
           </Content>
@@ -108,6 +135,6 @@ class _layout extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(_layout)
+export default connect(mapStateToProps, mapDispatchToProps)(_layout);
 
 

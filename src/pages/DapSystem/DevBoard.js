@@ -4,7 +4,7 @@ class DevBoard extends Component{
   render(){
     return(
       <div>
-        DevBoard
+        {this.props.info.name}
       </div>
     );
   }

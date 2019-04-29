@@ -22,10 +22,14 @@ export default {
             name:"",
             item:[{
               pt_id:"",
+              pt_name:"",
+              pt_type:"",
             }],
           }],
           item:[{
             pt_id:"",
+            pt_name:"",
+            pt_type:"",
           }],
         }],
       }],

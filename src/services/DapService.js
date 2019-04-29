@@ -11,3 +11,7 @@ export function GET_APP_INFO(){
 export function GET_SYSTEM_INFO(id){
   return request('/api/deva/get_sysinfo/'+id);
 }
+
+export function GET_TIME_SERIES_DATA(id, start, end) {
+  return request('/api/deva/get_pointvalue/'+id+'?start='+start+'&end='+end);
+}

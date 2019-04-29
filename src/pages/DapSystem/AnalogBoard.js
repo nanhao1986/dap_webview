@@ -1,14 +1,14 @@
 import React, {Component} from 'react';
 
 
-class SysBoard extends Component{
+class AnalogBoard extends Component{
   render(){
     return(
       <div>
-        {this.props.info.name}
+        {this.props.id}
       </div>
     );
   }
 }
 
-export default SysBoard;
+export default AnalogBoard;
